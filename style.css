@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.touch-1, .touch-2 {
+    height: 50vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: 20vw;
+    color: #ffffff;
+    user-select: none;
+    padding-left: 20vw;
+}
+
+.touch-1 {
+    background-color: cadetblue;
+}
+
+.touch-2 {
+    background-color: darkorange;
+}
+
+.line {
+    position: fixed;
+    height: 200vh;
+    width: 30px;
+    background-color: darkseagreen;
+    top: -50vh;
+    left: calc(50vw - 15px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inline {
+    background-color: #000;
+    width: 30px;
+    height: 30px;
+}
