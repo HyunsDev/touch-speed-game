@@ -5,7 +5,7 @@ import './css/game.scss';
 import './css/screen.scss';
 
 const ScreenBtns = (props) => {
-  return (<div className={`btns btns-${props.team}`} onClick={() => props.setReady(!props.isReady) }>
+  return (<div className={`btns team-${props.team}`} onClick={() => props.setReady(!props.isReady) }>
     <div className={`btn ${props.isReady ? "btn-ready" : ""}`}>
       {props.isReady ? "준비 완료!!!" : "준비"}
     </div>
@@ -14,9 +14,8 @@ const ScreenBtns = (props) => {
 }
 
 const CountdownScreen = (props) => {
-
-  const [timer, setTimer] = useState(0)
-  const time = useRef(0);
+  const [timer, setTimer] = useState(3)
+  const time = useRef(3);
   const timerId = useRef(null);
 
   useEffect(() => {
@@ -34,11 +33,17 @@ const CountdownScreen = (props) => {
     if (time.current <= 0) {
       time.current = 0
       setTimer(time.current)
+      props.gameStart()
     }
-    console.log("타임")
-  }, [timer]);
+  }, [timer, props]);
+
+  const numberBlock = (team) => (<div className={`countdown team-${String(team)}`}>
+    {timer}
+  </div>)
 
   return <>
+    {numberBlock(1)}
+    {numberBlock(2)}
   </>
 }
 
@@ -46,9 +51,12 @@ const IntroScreen = (props) => {
   const [isYellowTeamReady, setYellowTeamReady] = useState(false)
   const [isGreenTeamReady, setGreenTeamReady] = useState(false)
 
-  if (isYellowTeamReady, isGreenTeamReady) {
+  useEffect(() => {
+    if (isYellowTeamReady && isGreenTeamReady) {
+      props.setShowScreen(<CountdownScreen gameStart={props.gameStart} />)
+    }
+  }, [isYellowTeamReady, isGreenTeamReady, props])
 
-  }
 
   return (<>
   <ScreenBtns isReady={isYellowTeamReady} setReady={setYellowTeamReady} team="1"/>
@@ -62,33 +70,51 @@ const IntroScreen = (props) => {
   </>)
 }
 
+const WinnerScreen = (props) => {
+  const [timer, setTimer] = useState(3)
+  const time = useRef(3);
+  const timerId = useRef(null);
+
+  useEffect(() => {
+    timerId.current = setInterval(() => {
+      if (time.current > 0) {
+        time.current -= 1;
+        setTimer(time.current);
+      }
+    }, 1000);
+
+    return () => clearInterval(timerId.current);
+  }, []);
+
+  useEffect(() => {
+    if (time.current <= 0) {
+      time.current = 0
+      setTimer(time.current)
+      props.setShowScreen(<IntroScreen setShowScreen={props.setShowScreen} gameStart={props.gameStart}/>)
+    }
+  }, [timer, props]);
+
+  const numberBlock = (team) => (<div className={`countdown team-${String(team)}`}>
+    {props.winner === 0 ? "동점" : props.winner === team ? "승리!" : "패배"}
+  </div>)
+
+  return <>
+    {numberBlock(1)}
+    {numberBlock(2)}
+  </>
+}
+
 const Screen = (props) => {
-  const [nowScreen, setNowScreen] = useState("intro")
   const [ShowScreen, setShowScreen] = useState(<></>)
 
   useEffect(() => {
-    switch (nowScreen) {
-      case 'intro':
-        console.log(1)
-        setShowScreen(<IntroScreen setNowScreen={setNowScreen} />)
-        break
+    setShowScreen(<WinnerScreen winner={props.winner} setShowScreen={setShowScreen} setShowScreen={setShowScreen} gameStart={props.gameStart} />)
+  }, [props.gameStart])
   
-      case 'countdown':
-        setShowScreen(<CountdownScreen gameStart={props.gameStart()} />)
-        break
-  
-      case 'result':
-        break
-      
-      default:
-        break
-    }
-  }, [nowScreen])
-
 
   return (
     <div className='screen'>
-      <ShowScreen />
+      {ShowScreen}
     </div>
   )
 }
@@ -96,6 +122,7 @@ const Screen = (props) => {
 function App() {
   const [isShowScreen, setShowScreen] = useState(true)
   const [lineMargin, setLineMargin] = useState(0)
+  const [winner, setWinner] = useState(0)
 
   const [timer, setTimer] = useState(0)
   const time = useRef(0);
@@ -114,6 +141,14 @@ function App() {
 
   useEffect(() => {
     if (time.current <= 0 || (lineMargin >= 20 || lineMargin <= -20)) {
+      if (lineMargin > 0) {
+        setWinner(2)
+      } else if (lineMargin < 0) {
+        setWinner(1)
+      } else {
+        setWinner(0)
+      }
+
       setShowScreen(true)
       time.current = 0
       setTimer(time.current)
@@ -129,7 +164,7 @@ function App() {
 
   return (
     <div className="App">
-      {isShowScreen ? <Screen setShowScreen={setShowScreen} gameStart={() => gameStart()} lineMargin={lineMargin}/> : <></>}
+      {isShowScreen ? <Screen setShowScreen={setShowScreen} gameStart={() => gameStart()} lineMargin={lineMargin} winner={winner}/> : <></>}
       <div className='game'>
         <div className="line" style={{marginTop: `${String(-100 + (lineMargin))}vh`}}>
           <div className='line-ribbon'></div>

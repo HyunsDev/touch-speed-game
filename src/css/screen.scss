@@ -42,7 +42,7 @@
         }
     }
 
-    .btns-1 {
+    .team-1 {
         transform: rotate(180deg);
     }
 
@@ -52,7 +52,7 @@
         margin-bottom: 64px;
 
         h1 {
-            font-size: 52px;
+            font-size: 10vw;
             font-weight: 700;
         }
 
@@ -60,5 +60,10 @@
             font-size: 16px;
             line-height: 180%;
         }
+    }
+
+    .countdown {
+        color: #ffffff;
+        font-size: 20vw;
     }
 }
