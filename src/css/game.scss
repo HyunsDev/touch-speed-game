@@ -1,0 +1,72 @@
+.fields {
+    user-select: none;
+    height: 100vh;
+    width: 100vw;
+
+    .yellow-field {
+        transform: rotate(180deg);
+        background-color: #F5B608;
+        height: 50%;
+    }
+
+    .green-field {
+        background-color: #167E56;
+        height: 50%;
+    }
+
+    .field {
+        box-sizing: border-box;
+        position: relative;
+        border-top: solid 4px #000000;
+
+        .field-line {
+            border-top: solid 8px #ffffff;
+            width: 50%;
+            left: 25%;
+            position: absolute;
+            top: 39%;
+        }
+
+        .field-count {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 10vw;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .field-title {
+            position: absolute;
+            left: 30px;
+            bottom: 30px;
+            color: #ffffff85;
+            font-size: 4vw;
+        }
+    }
+}
+
+.line {
+    position: fixed;
+    width: 52px;
+    height: 300vh;
+    left: calc(50vw - 26px);
+    background-color: #F5D328;
+    z-index: 3;
+    box-sizing: border-box;
+    border: solid 8px #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 200ms;
+    pointer-events: none; 
+
+    .line-ribbon {
+        min-width: 72px;
+        height: 32px;
+        background-color: #EB4C42;
+        border: solid 8px #000;
+        z-index: 4;
+        box-sizing: border-box;
+    }
+}
